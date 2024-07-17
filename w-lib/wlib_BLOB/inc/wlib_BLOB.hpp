@@ -27,68 +27,72 @@ namespace wlib::blob
     void clear() noexcept;
     bool try_adjust_position(std::ptrdiff_t const& offset) noexcept;
 
-    bool try_push_back(std::byte const& byte) noexcept;
+    bool try_push_range(std::size_t offset, std::byte const* begin, std::size_t number_of_bytes) noexcept;
+    bool try_push_range_reverse(std::size_t offset, std::byte const* begin, std::size_t number_of_bytes) noexcept;
+
+    bool try_push_back(std::byte byte) noexcept;
     bool try_push_back(std::byte const* begin, std::byte const* end) noexcept;
-    bool try_push_back(std::byte const* begin, std::size_t const& number_of_bytes) noexcept;
-    bool try_push_back(std::span<std::byte> const& data) noexcept;
+    bool try_push_back(std::byte const* begin, std::size_t number_of_bytes) noexcept;
+    bool try_push_back(std::span<std::byte> data) noexcept;
 
-    bool try_push_front(std::byte const& byte) noexcept;
+    bool try_push_front(std::byte byte) noexcept;
     bool try_push_front(std::byte const* begin, std::byte const* end) noexcept;
-    bool try_push_front(std::byte const* begin, std::size_t const& number_of_bytes) noexcept;
-    bool try_push_front(std::span<std::byte> const& data) noexcept;
+    bool try_push_front(std::byte const* begin, std::size_t number_of_bytes) noexcept;
+    bool try_push_front(std::span<std::byte> data) noexcept;
 
-    bool try_push_back_reverse(std::byte const& byte) noexcept;
+    bool try_push_back_reverse(std::byte byte) noexcept;
     bool try_push_back_reverse(std::byte const* begin, std::byte const* end) noexcept;
-    bool try_push_back_reverse(std::byte const* begin, std::size_t const& number_of_bytes) noexcept;
-    bool try_push_back_reverse(std::span<std::byte> const& data) noexcept;
+    bool try_push_back_reverse(std::byte const* begin, std::size_t number_of_bytes) noexcept;
+    bool try_push_back_reverse(std::span<std::byte> data) noexcept;
 
-    bool try_push_front_reverse(std::byte const& byte) noexcept;
+    bool try_push_front_reverse(std::byte byte) noexcept;
     bool try_push_front_reverse(std::byte const* begin, std::byte const* end) noexcept;
-    bool try_push_front_reverse(std::byte const* begin, std::size_t const& number_of_bytes) noexcept;
-    bool try_push_front_reverse(std::span<std::byte> const& data) noexcept;
+    bool try_push_front_reverse(std::byte const* begin, std::size_t number_of_bytes) noexcept;
+    bool try_push_front_reverse(std::span<std::byte> data) noexcept;
 
+    template <ArithmeticOrByte T> bool try_push_range(std::size_t offset, T const& value, std::endian endian = std::endian::native) noexcept;
     template <ArithmeticOrByte T> bool try_push_back(T const& value, std::endian endian = std::endian::native) noexcept;
     template <ArithmeticOrByte T> bool try_push_front(T const& value, std::endian endian = std::endian::native) noexcept;
 
-    constexpr bool try_peak_range(std::size_t const& offset, std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
-    constexpr bool try_peak_back(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
-    constexpr bool try_peak_front(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
+    constexpr bool try_peak_range(std::size_t offset, std::byte* ptr, std::size_t number_of_bytes) const noexcept;
+    constexpr bool try_peak_back(std::byte* ptr, std::size_t number_of_bytes) const noexcept;
+    constexpr bool try_peak_front(std::byte* ptr, std::size_t number_of_bytes) const noexcept;
 
-    constexpr bool try_peak_range_reverse(std::size_t const& offset, std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
-    constexpr bool try_peak_back_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
-    constexpr bool try_peak_front_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept;
+    constexpr bool try_peak_range_reverse(std::size_t offset, std::byte* ptr, std::size_t number_of_bytes) const noexcept;
+    constexpr bool try_peak_back_reverse(std::byte* ptr, std::size_t number_of_bytes) const noexcept;
+    constexpr bool try_peak_front_reverse(std::byte* ptr, std::size_t number_of_bytes) const noexcept;
 
-    template <ArithmeticOrByte T> bool try_peak_range(std::size_t const& offset, T& value, std::endian endian = std::endian::native) const noexcept;
+    template <ArithmeticOrByte T> bool try_peak_range(std::size_t offset, T& value, std::endian endian = std::endian::native) const noexcept;
     template <ArithmeticOrByte T> bool try_peak_back(T& value, std::endian endian = std::endian::native) const noexcept;
     template <ArithmeticOrByte T> bool try_peak_front(T& value, std::endian endian = std::endian::native) const noexcept;
 
-    bool try_drop_range(std::size_t const& offset, std::size_t const& number_of_bytes = 1) noexcept;
-    bool try_drop_back(std::size_t const& number_of_bytes = 1) noexcept;
-    bool try_drop_front(std::size_t const& number_of_bytes = 1) noexcept;
+    bool try_drop_range(std::size_t offset, std::size_t number_of_bytes = 1) noexcept;
+    bool try_drop_back(std::size_t number_of_bytes = 1) noexcept;
+    bool try_drop_front(std::size_t number_of_bytes = 1) noexcept;
 
-    template <ArithmeticOrByte T> bool try_drop_range(std::size_t const& offset) noexcept;
+    template <ArithmeticOrByte T> bool try_drop_range(std::size_t offset) noexcept;
     template <ArithmeticOrByte T> bool try_drop_back() noexcept;
     template <ArithmeticOrByte T> bool try_drop_front() noexcept;
 
-    template <ArithmeticOrByte T> bool try_pop_range(std::size_t const& offset, T& value, std::endian endian = std::endian::native) noexcept;
+    template <ArithmeticOrByte T> bool try_pop_range(std::size_t offset, T& value, std::endian endian = std::endian::native) noexcept;
     template <ArithmeticOrByte T> bool try_pop_back(T& value, std::endian endian = std::endian::native) noexcept;
     template <ArithmeticOrByte T> bool try_pop_front(T& value, std::endian endian = std::endian::native) noexcept;
 
-    void push_back(std::byte const& byte);
+    void push_back(std::byte byte);
     void push_back(std::byte const* begin, std::byte const* end);
-    void push_back(std::byte const* begin, std::size_t const& number_of_bytes);
-    void push_back(std::span<std::byte> const& data) noexcept;
+    void push_back(std::byte const* begin, std::size_t number_of_bytes);
+    void push_back(std::span<std::byte> data) noexcept;
 
-    void drop_back(std::size_t const& number_of_bytes = 1);
+    void drop_back(std::size_t number_of_bytes = 1);
 
     std::byte peak_back() const;
 
     std::byte pop_back();
 
-    void push_front(std::byte const& byte);
+    void push_front(std::byte byte);
     void push_front(std::byte const* begin, std::byte const* end);
-    void push_front(std::byte const* begin, std::size_t const& number_of_bytes);
-    void push_front(std::span<std::byte> const& data) noexcept;
+    void push_front(std::byte const* begin, std::size_t number_of_bytes);
+    void push_front(std::span<std::byte> data) noexcept;
 
     void drop_front();
 
@@ -99,8 +103,8 @@ namespace wlib::blob
     std::span<std::byte> get_blob() const;
 
   private:
-    void p_shift_right(std::size_t const& shift);
-    void p_shift_left(std::size_t const& offset, std::size_t const& shift);
+    static std::size_t data_shift_right(std::byte* data, std::size_t const& size, std::size_t offset, std::size_t const& shift);
+    static std::size_t data_shift_left(std::byte* data, std::size_t const& size, std::size_t offset, std::size_t const& shift);
 
     static std::size_t byte_copy(std::byte* dst, std::byte const* src, std::size_t const& size);
     static std::size_t byte_copy_reverse(std::byte* dst, std::byte const* src, std::size_t const& size);
@@ -154,6 +158,14 @@ namespace wlib::blob
   {
   }
 
+  template <ArithmeticOrByte T> inline bool obj::try_push_range(std::size_t offset, T const& value, std::endian endian) noexcept
+  {
+    if (endian == std::endian::native)
+      return this->try_push_range(offset, reinterpret_cast<std::byte const*>(&value), sizeof(value));
+    else
+      return this->try_push_range(offset, reinterpret_cast<std::byte const*>(&value), sizeof(value));
+  }
+
   template <ArithmeticOrByte T> inline bool obj::try_push_back(T const& value, std::endian endian) noexcept
   {
     if (endian == std::endian::native)
@@ -162,7 +174,7 @@ namespace wlib::blob
       return this->try_push_back_reverse(reinterpret_cast<std::byte const*>(&value), sizeof(value));
   }
 
-  template <ArithmeticOrByte T> inline bool obj::try_peak_range(std::size_t const& offset, T& value, std::endian endian) const noexcept
+  template <ArithmeticOrByte T> inline bool obj::try_peak_range(std::size_t offset, T& value, std::endian endian) const noexcept
   {
     if (endian == std::endian::native)
     {
@@ -186,11 +198,11 @@ namespace wlib::blob
     }
   }
 
-  template <ArithmeticOrByte T> inline bool obj::try_drop_range(std::size_t const& offset) noexcept { return this->try_drop_range(offset, sizeof(T)); }
+  template <ArithmeticOrByte T> inline bool obj::try_drop_range(std::size_t offset) noexcept { return this->try_drop_range(offset, sizeof(T)); }
 
   template <ArithmeticOrByte T> inline bool obj::try_drop_back() noexcept { return this->try_drop_back(sizeof(T)); }
 
-  template <ArithmeticOrByte T> inline bool obj::try_pop_range(std::size_t const& offset, T& value, std::endian endian) noexcept
+  template <ArithmeticOrByte T> inline bool obj::try_pop_range(std::size_t offset, T& value, std::endian endian) noexcept
   {
     return this->try_peak_range(offset, value, endian) && this->try_drop_back<T>(offset);
   }
@@ -229,28 +241,22 @@ namespace wlib::blob
 
   inline constexpr std::size_t obj::get_number_of_used_bytes() const noexcept { return this->m_pos_idx; }
 
-  inline bool obj::try_push_back(std::byte const& byte) noexcept { return this->try_push_back(&byte, 1); }
+  inline bool obj::try_push_back(std::byte byte) noexcept { return this->try_push_back(&byte, 1); }
 
   inline bool obj::try_push_back(std::byte const* begin, std::byte const* end) noexcept { return this->try_push_back(begin, end - begin); }
 
-  inline bool obj::try_push_back(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_push_back(std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
-    std::size_t const end_pos = this->m_pos_idx + number_of_bytes;
-    if (end_pos >= this->m_size)
-      return false;
-
-    this->m_pos_idx += obj::byte_copy(&this->m_data[this->m_pos_idx], begin, number_of_bytes);
-
-    return true;
+    return this->try_push_range(this->m_pos_idx, begin, number_of_bytes);
   }
 
-  inline bool obj::try_push_back(std::span<std::byte> const& data) noexcept { return this->try_push_back(data.data(), data.size_bytes()); }
+  inline bool obj::try_push_back(std::span<std::byte> data) noexcept { return this->try_push_back(data.data(), data.size_bytes()); }
 
-  inline bool obj::try_push_back_reverse(std::byte const& byte) noexcept { return this->try_push_back_reverse(&byte, 1); }
+  inline bool obj::try_push_back_reverse(std::byte byte) noexcept { return this->try_push_back_reverse(&byte, 1); }
 
   inline bool obj::try_push_back_reverse(std::byte const* begin, std::byte const* end) noexcept { return this->try_push_back_reverse(begin, end - begin); }
 
-  inline bool obj::try_push_back_reverse(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_push_back_reverse(std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
     std::size_t const end_pos = this->m_pos_idx + number_of_bytes;
     if (end_pos >= this->m_size)
@@ -261,9 +267,9 @@ namespace wlib::blob
     return true;
   }
 
-  inline bool obj::try_push_back_reverse(std::span<std::byte> const& data) noexcept { return this->try_push_back_reverse(data.data(), data.size_bytes()); }
+  inline bool obj::try_push_back_reverse(std::span<std::byte> data) noexcept { return this->try_push_back_reverse(data.data(), data.size_bytes()); }
 
-  inline constexpr bool obj::try_peak_range(std::size_t const& offset, std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_range(std::size_t offset, std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     if (this->m_pos_idx < (offset + number_of_bytes))
       return false;
@@ -272,7 +278,7 @@ namespace wlib::blob
     return true;
   }
 
-  inline constexpr bool obj::try_peak_range_reverse(std::size_t const& offset, std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_range_reverse(std::size_t offset, std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     if (this->m_pos_idx < (offset + number_of_bytes))
       return false;
@@ -281,26 +287,26 @@ namespace wlib::blob
     return true;
   }
 
-  inline constexpr bool obj::try_peak_back(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_back(std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     return this->try_peak_range(this->m_pos_idx - number_of_bytes, ptr, number_of_bytes);
   }
 
-  inline constexpr bool obj::try_peak_back_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_back_reverse(std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     return this->try_peak_range_reverse(this->m_pos_idx - number_of_bytes, ptr, number_of_bytes);
   }
 
-  inline bool obj::try_drop_range(std::size_t const& offset, std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_drop_range(std::size_t offset, std::size_t number_of_bytes) noexcept
   {
     if (this->m_pos_idx < (offset + number_of_bytes))
       return false;
 
-    this->p_shift_left(offset, number_of_bytes);
+    this->m_pos_idx -= this->data_shift_left(this->m_data, this->m_pos_idx, offset, number_of_bytes);
     return true;
   }
 
-  inline bool obj::try_drop_back(std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_drop_back(std::size_t number_of_bytes) noexcept
   {
     if (this->m_pos_idx < number_of_bytes)
       return false;
@@ -308,59 +314,54 @@ namespace wlib::blob
     return true;
   }
 
-  inline bool obj::try_push_front(std::byte const& byte) noexcept { return this->try_push_front(&byte, 1); }
+  inline bool obj::try_push_front(std::byte byte) noexcept { return this->try_push_front(&byte, 1); }
 
   inline bool obj::try_push_front(std::byte const* begin, std::byte const* end) noexcept { return this->try_push_front(begin, end - begin); }
 
-  inline bool obj::try_push_front(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_push_front(std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
-    std::size_t const end_pos = this->m_pos_idx + number_of_bytes;
-    if (end_pos >= this->m_size)
-      return false;
-
-    this->p_shift_right(number_of_bytes);
-    obj::byte_copy(&this->m_data[0], begin, number_of_bytes);
-    return true;
+    return this->try_push_range(0, begin, number_of_bytes);
   }
 
-  inline bool obj::try_push_front(std::span<std::byte> const& data) noexcept { return this->try_push_front(data.data(), data.size_bytes()); }
+  inline bool obj::try_push_front(std::span<std::byte> data) noexcept { return this->try_push_front(data.data(), data.size_bytes()); }
 
-  inline bool obj::try_push_front_reverse(std::byte const& byte) noexcept { return this->try_push_front_reverse(&byte, 1); }
+  inline bool obj::try_push_front_reverse(std::byte byte) noexcept { return this->try_push_front_reverse(&byte, 1); }
 
   inline bool obj::try_push_front_reverse(std::byte const* begin, std::byte const* end) noexcept { return this->try_push_front_reverse(begin, end - begin); }
 
-  inline bool obj::try_push_front_reverse(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_push_front_reverse(std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
     std::size_t const end_pos = this->m_pos_idx + number_of_bytes;
     if (end_pos >= this->m_size)
       return false;
 
-    this->p_shift_right(number_of_bytes);
+    this->m_pos_idx += this->data_shift_right(this->m_data, this->m_pos_idx, 0, number_of_bytes);
     obj::byte_copy_reverse(&this->m_data[0], begin, number_of_bytes);
     return true;
   }
 
-  inline bool obj::try_push_front_reverse(std::span<std::byte> const& data) noexcept { return this->try_push_front_reverse(data.data(), data.size_bytes()); }
+  inline bool obj::try_push_front_reverse(std::span<std::byte> data) noexcept { return this->try_push_front_reverse(data.data(), data.size_bytes()); }
 
-  inline constexpr bool obj::try_peak_front(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_front(std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     return this->try_peak_range(0, ptr, number_of_bytes);
   }
 
-  inline constexpr bool obj::try_peak_front_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
+  inline constexpr bool obj::try_peak_front_reverse(std::byte* ptr, std::size_t number_of_bytes) const noexcept
   {
     return this->try_peak_range_reverse(0, ptr, number_of_bytes);
   }
 
-  inline bool obj::try_drop_front(std::size_t const& number_of_bytes) noexcept
+  inline bool obj::try_drop_front(std::size_t number_of_bytes) noexcept
   {
     if (this->m_pos_idx < number_of_bytes)
       return false;
-    this->p_shift_left(0, number_of_bytes);
+
+    this->m_pos_idx -= this->data_shift_left(this->m_data, this->m_pos_idx, 0, number_of_bytes);
     return true;
   }
 
-  inline void obj::push_back(std::byte const& byte)
+  inline void obj::push_back(std::byte byte)
   {
     if (!this->try_push_back(byte))
       return obj::handle_push_back_exception();
@@ -372,19 +373,19 @@ namespace wlib::blob
       return obj::handle_push_back_exception();
   }
 
-  inline void obj::push_back(std::byte const* begin, std::size_t const& number_of_bytes)
+  inline void obj::push_back(std::byte const* begin, std::size_t number_of_bytes)
   {
     if (!this->try_push_back(begin, number_of_bytes))
       return obj::handle_push_back_exception();
   }
 
-  inline void obj::push_back(std::span<std::byte> const& data) noexcept
+  inline void obj::push_back(std::span<std::byte> data) noexcept
   {
     if (!this->try_push_back(data))
       return obj::handle_push_back_exception();
   }
 
-  inline void obj::drop_back(std::size_t const& number_of_bytes)
+  inline void obj::drop_back(std::size_t number_of_bytes)
   {
     if (!this->try_drop_back(number_of_bytes))
       return obj::handle_drop_back_exception();
@@ -405,7 +406,7 @@ namespace wlib::blob
     return tmp;
   }
 
-  inline void obj::push_front(std::byte const& byte)
+  inline void obj::push_front(std::byte byte)
   {
     if (!this->try_push_front(byte))
       return handle_push_front_exception();
@@ -417,13 +418,13 @@ namespace wlib::blob
       return obj::handle_push_back_exception();
   }
 
-  inline void obj::push_front(std::byte const* begin, std::size_t const& number_of_bytes)
+  inline void obj::push_front(std::byte const* begin, std::size_t number_of_bytes)
   {
     if (!this->try_push_front(begin, number_of_bytes))
       return obj::handle_push_back_exception();
   }
 
-  inline void obj::push_front(std::span<std::byte> const& data) noexcept
+  inline void obj::push_front(std::span<std::byte> data) noexcept
   {
     if (!this->try_push_front(data))
       return obj::handle_push_back_exception();
@@ -465,23 +466,47 @@ namespace wlib::blob
     return true;
   }
 
-  inline void obj::p_shift_right(std::size_t const& shift)
+  inline bool obj::try_push_range(std::size_t offset, std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
-    for (std::size_t i = this->m_pos_idx + shift; i > shift;)
-    {
-      --i;
-      this->m_data[i] = this->m_data[i - shift];
-    }
-    this->m_pos_idx += shift;
+    std::size_t const end_idx = this->m_pos_idx + number_of_bytes;
+    if (end_idx >= this->m_size)
+      return false;
+
+    std::size_t const tmp = this->data_shift_right(this->m_data, this->m_pos_idx, offset, number_of_bytes);
+    obj::byte_copy(&this->m_data[offset], begin, number_of_bytes);
+    this->m_pos_idx += tmp;
+    return true;
   }
 
-  inline void obj::p_shift_left(std::size_t const& offset, std::size_t const& shift)
+  inline bool obj::try_push_range_reverse(std::size_t offset, std::byte const* begin, std::size_t number_of_bytes) noexcept
   {
-    for (std::size_t i = offset; i < this->m_pos_idx - shift; i++)
+    std::size_t const end_idx = this->m_pos_idx + number_of_bytes;
+    if (end_idx >= this->m_size)
+      return false;
+
+    std::size_t const tmp = this->data_shift_right(this->m_data, this->m_pos_idx, offset, number_of_bytes);
+    obj::byte_copy_reverse(&this->m_data[offset], begin, number_of_bytes);
+    this->m_pos_idx += tmp;
+    return true;
+  }
+
+  inline std::size_t obj::data_shift_right(std::byte* data, std::size_t const& size, std::size_t offset, std::size_t const& shift)
+  {
+    for (std::size_t i = size + shift; i > (offset + shift);)
     {
-      this->m_data[i] = this->m_data[i + shift];
+      --i;
+      data[i] = data[i - shift];
     }
-    this->m_pos_idx -= shift;
+    return shift;
+  }
+
+  inline std::size_t obj::data_shift_left(std::byte* data, std::size_t const& size, std::size_t offset, std::size_t const& shift)
+  {
+    for (std::size_t i = offset; i < size - shift; i++)
+    {
+      data[i] = data[i + shift];
+    }
+    return shift;
   }
 }    // namespace wlib::blob
 
