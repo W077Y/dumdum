@@ -1,0 +1,9 @@
+.vs
+out
+build
+*.user
+logs
+
+
+toolchain/**
+!toolchain/*
