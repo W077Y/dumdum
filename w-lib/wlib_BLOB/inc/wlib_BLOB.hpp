@@ -19,7 +19,7 @@ namespace wlib::blob
     constexpr MemoryBlob(std::byte* begin, std::size_t const& size, std::size_t const& position_idx = 0) noexcept;
     constexpr MemoryBlob(std::span<std::byte>& data, std::size_t const& position_idx = 0) noexcept;
 
-    template <std::size_t N> constexpr MemoryBlob(std::byte (&buffer)[N], std::size_t const& position_idx = 0) noexcept;
+    template <std::size_t N> constexpr MemoryBlob(std::byte (&buffer)[N]) noexcept;
 
     [[nodiscard]] constexpr std::size_t                get_total_number_of_bytes() const noexcept;
     [[nodiscard]] constexpr std::size_t                get_number_of_free_bytes() const noexcept;
@@ -209,8 +209,8 @@ namespace wlib::blob
   };
 
   template <std::size_t N>
-  inline constexpr MemoryBlob::MemoryBlob(std::byte (&buffer)[N], std::size_t const& position_idx) noexcept
-      : MemoryBlob(buffer, N, position_idx)
+  inline constexpr MemoryBlob::MemoryBlob(std::byte (&buffer)[N]) noexcept
+      : MemoryBlob(buffer, N)
   {
   }
 

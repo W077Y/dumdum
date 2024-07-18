@@ -18,6 +18,56 @@ void print_buffer(wlib::blob::MemoryBlob const& blob, std::span<std::byte> const
 
 TEST_CASE()
 {
+  std::byte            buffer[30]{};
+  std::byte*           buffer_begin = buffer;
+  std::byte*           buffer_end   = buffer + sizeof(buffer);
+  std::span<std::byte> buffer_span{ buffer };
+  {
+    wlib::blob::MemoryBlob blob{ buffer_begin, buffer_end };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 30);
+    REQUIRE(blob.get_number_of_used_bytes() == 0);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer_begin, sizeof(buffer) };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 30);
+    REQUIRE(blob.get_number_of_used_bytes() == 0);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 30);
+    REQUIRE(blob.get_number_of_used_bytes() == 0);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer_span };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 30);
+    REQUIRE(blob.get_number_of_used_bytes() == 0);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer_begin, buffer_end, buffer_begin + 3 };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 27);
+    REQUIRE(blob.get_number_of_used_bytes() == 3);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer_begin, sizeof(buffer), 3 };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 27);
+    REQUIRE(blob.get_number_of_used_bytes() == 3);
+  }
+  {
+    wlib::blob::MemoryBlob blob{ buffer_span, 3 };
+    REQUIRE(blob.get_total_number_of_bytes() == 30);
+    REQUIRE(blob.get_number_of_free_bytes() == 27);
+    REQUIRE(blob.get_number_of_used_bytes() == 3);
+  }
+}
+
+TEST_CASE()
+{
   std::byte buffer[30]{};
 
   wlib::blob::MemoryBlob blob{ buffer };
@@ -243,7 +293,7 @@ TEST_CASE()
 
   blob.insert_back(static_cast<uint32_t>(0x00AA'BBEF), std::endian::big);
   blob.insert_front(static_cast<uint32_t>(0xDECC'DDAD), std::endian::big);
-  blob.insert(4,static_cast<uint16_t>(0xBE00), std::endian::big);
+  blob.insert(4, static_cast<uint16_t>(0xBE00), std::endian::big);
   REQUIRE(blob.get_number_of_used_bytes() == 10);
 
   REQUIRE(blob.extract<uint16_t>(1, std::endian::little) == 0xDDCC);
