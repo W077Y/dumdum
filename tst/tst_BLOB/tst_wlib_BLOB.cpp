@@ -26,10 +26,10 @@ TEST_CASE()
   REQUIRE(blob.get_number_of_free_bytes() == 30);
   REQUIRE(blob.get_number_of_used_bytes() == 0);
 
-  blob.push_back(static_cast<std::byte>(0x03));
-  blob.push_back(static_cast<std::byte>(0x04));
-  blob.push_front(static_cast<std::byte>(0x02));
-  blob.push_front(static_cast<std::byte>(0x01));
+  blob.insert_back(static_cast<std::byte>(0x03));
+  blob.insert_back(static_cast<std::byte>(0x04));
+  blob.insert_front(static_cast<std::byte>(0x02));
+  blob.insert_front(static_cast<std::byte>(0x01));
 
   REQUIRE(blob.get_total_number_of_bytes() == 30);
   REQUIRE(blob.get_number_of_free_bytes() == 26);
@@ -62,7 +62,7 @@ TEST_CASE()
   std::size_t suc_count = 0;
   for (uint32_t val : val_in)
   {
-    if (blob.try_push_back(val))
+    if (blob.try_insert_back(val))
       suc_count++;
   }
   REQUIRE(suc_count == 3);
@@ -75,7 +75,7 @@ TEST_CASE()
   suc_count = 0;
   for (uint32_t& val : val_out)
   {
-    if (blob.try_pop_front(val))
+    if (blob.try_extract_front(val))
       suc_count++;
   }
   REQUIRE(suc_count == 3);
@@ -106,30 +106,30 @@ TEST_CASE()
   REQUIRE(blob.get_number_of_used_bytes() == 0);
 
   bool ret = true;
-  ret &= blob.try_push_back(static_cast<std::byte>(0x01));
-  ret &= blob.try_push_back(static_cast<char>(0x02));
-  ret &= blob.try_push_back(static_cast<signed char>(0x03));
-  ret &= blob.try_push_back(static_cast<unsigned char>(0x04));
-  ret &= blob.try_push_back(static_cast<char8_t>(0x05));
-  ret &= blob.try_push_back(static_cast<char16_t>(0x06));
-  ret &= blob.try_push_back(static_cast<char32_t>(0x07));
-  ret &= blob.try_push_back(static_cast<signed short>(0x08));
-  ret &= blob.try_push_back(static_cast<unsigned short>(0x09));
-  ret &= blob.try_push_back(static_cast<signed int>(0x0A));
-  ret &= blob.try_push_back(static_cast<unsigned int>(0x0B));
-  ret &= blob.try_push_back(static_cast<signed long>(0x0C));
-  ret &= blob.try_push_back(static_cast<unsigned long>(0x0D));
-  ret &= blob.try_push_back(static_cast<signed long long>(0x0E));
-  ret &= blob.try_push_back(static_cast<unsigned long long>(0x0F));
-  ret &= blob.try_push_back(static_cast<float>(0x10));
-  ret &= blob.try_push_back(static_cast<double>(0x11));
-  ret &= blob.try_push_back(static_cast<long double>(0x12));
+  ret &= blob.try_insert_back(static_cast<std::byte>(0x01));
+  ret &= blob.try_insert_back(static_cast<char>(0x02));
+  ret &= blob.try_insert_back(static_cast<signed char>(0x03));
+  ret &= blob.try_insert_back(static_cast<unsigned char>(0x04));
+  ret &= blob.try_insert_back(static_cast<char8_t>(0x05));
+  ret &= blob.try_insert_back(static_cast<char16_t>(0x06));
+  ret &= blob.try_insert_back(static_cast<char32_t>(0x07));
+  ret &= blob.try_insert_back(static_cast<signed short>(0x08));
+  ret &= blob.try_insert_back(static_cast<unsigned short>(0x09));
+  ret &= blob.try_insert_back(static_cast<signed int>(0x0A));
+  ret &= blob.try_insert_back(static_cast<unsigned int>(0x0B));
+  ret &= blob.try_insert_back(static_cast<signed long>(0x0C));
+  ret &= blob.try_insert_back(static_cast<unsigned long>(0x0D));
+  ret &= blob.try_insert_back(static_cast<signed long long>(0x0E));
+  ret &= blob.try_insert_back(static_cast<unsigned long long>(0x0F));
+  ret &= blob.try_insert_back(static_cast<float>(0x10));
+  ret &= blob.try_insert_back(static_cast<double>(0x11));
+  ret &= blob.try_insert_back(static_cast<long double>(0x12));
 
   REQUIRE(ret);
   REQUIRE(blob.get_total_number_of_bytes() == buffer_size);
   REQUIRE(blob.get_number_of_free_bytes() == 1);
   REQUIRE(blob.get_number_of_used_bytes() == buffer_size - 1);
-  REQUIRE_FALSE(blob.try_push_back(static_cast<long double>(0x13)));
+  REQUIRE_FALSE(blob.try_insert_back(static_cast<long double>(0x13)));
 
   long double        val_long_double;
   double             val_double;
@@ -150,24 +150,24 @@ TEST_CASE()
   char               val_char;
   std::byte          val_byte;
 
-  ret &= blob.try_pop_back(val_long_double);
-  ret &= blob.try_pop_back(val_double);
-  ret &= blob.try_pop_back(val_float);
-  ret &= blob.try_pop_back(val_unsigned_long_long);
-  ret &= blob.try_pop_back(val_signed_long_long);
-  ret &= blob.try_pop_back(val_unsigned_long);
-  ret &= blob.try_pop_back(val_signed_long);
-  ret &= blob.try_pop_back(val_unsigned_int);
-  ret &= blob.try_pop_back(val_signed_int);
-  ret &= blob.try_pop_back(val_unsigned_short);
-  ret &= blob.try_pop_back(val_signed_short);
-  ret &= blob.try_pop_back(val_char32_t);
-  ret &= blob.try_pop_back(val_char16_t);
-  ret &= blob.try_pop_back(val_char8_t);
-  ret &= blob.try_pop_back(val_unsigned_char);
-  ret &= blob.try_pop_back(val_signed_char);
-  ret &= blob.try_pop_back(val_char);
-  ret &= blob.try_pop_back(val_byte);
+  ret &= blob.try_extract_back(val_long_double);
+  ret &= blob.try_extract_back(val_double);
+  ret &= blob.try_extract_back(val_float);
+  ret &= blob.try_extract_back(val_unsigned_long_long);
+  ret &= blob.try_extract_back(val_signed_long_long);
+  ret &= blob.try_extract_back(val_unsigned_long);
+  ret &= blob.try_extract_back(val_signed_long);
+  ret &= blob.try_extract_back(val_unsigned_int);
+  ret &= blob.try_extract_back(val_signed_int);
+  ret &= blob.try_extract_back(val_unsigned_short);
+  ret &= blob.try_extract_back(val_signed_short);
+  ret &= blob.try_extract_back(val_char32_t);
+  ret &= blob.try_extract_back(val_char16_t);
+  ret &= blob.try_extract_back(val_char8_t);
+  ret &= blob.try_extract_back(val_unsigned_char);
+  ret &= blob.try_extract_back(val_signed_char);
+  ret &= blob.try_extract_back(val_char);
+  ret &= blob.try_extract_back(val_byte);
 
   REQUIRE(val_long_double == static_cast<long double>(0x12));
   REQUIRE(val_double == static_cast<double>(0x11));
@@ -193,9 +193,84 @@ TEST_CASE()
   REQUIRE(blob.get_number_of_free_bytes() == buffer_size);
   REQUIRE(blob.get_number_of_used_bytes() == 0);
 
-  REQUIRE(blob.try_push_back(static_cast<long long>(0x13)));
+  REQUIRE(blob.try_insert_back(static_cast<long long>(0x13)));
 
   REQUIRE(blob.get_total_number_of_bytes() == buffer_size);
   REQUIRE(blob.get_number_of_free_bytes() == buffer_size - sizeof(long long));
   REQUIRE(blob.get_number_of_used_bytes() == sizeof(long long));
+}
+
+TEST_CASE()
+{
+  std::byte buffer[14]{};
+
+  wlib::blob::obj blob{ buffer };
+
+  REQUIRE(blob.get_total_number_of_bytes() == 14);
+  REQUIRE(blob.get_number_of_free_bytes() == 14);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  REQUIRE_FALSE(blob.try_adjust_position(1000));
+
+  REQUIRE(blob.get_number_of_free_bytes() == 14);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  REQUIRE_FALSE(blob.try_adjust_position(-1000));
+
+  REQUIRE(blob.get_number_of_free_bytes() == 14);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  REQUIRE(blob.try_adjust_position(5));
+
+  REQUIRE(blob.get_number_of_free_bytes() == 9);
+  REQUIRE(blob.get_number_of_used_bytes() == 5);
+
+  REQUIRE(blob.try_adjust_position(-3));
+
+  REQUIRE(blob.get_number_of_free_bytes() == 12);
+  REQUIRE(blob.get_number_of_used_bytes() == 2);
+}
+
+TEST_CASE()
+{
+  std::byte buffer[14]{};
+
+  wlib::blob::obj blob{ buffer };
+
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+  REQUIRE_THROWS(blob.insert(1, static_cast<uint16_t>(0), std::endian::big));
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  blob.insert_back(static_cast<uint32_t>(0x00AA'BBEF), std::endian::big);
+  blob.insert_front(static_cast<uint32_t>(0xDECC'DDAD), std::endian::big);
+  blob.insert(4,static_cast<uint16_t>(0xBE00), std::endian::big);
+  REQUIRE(blob.get_number_of_used_bytes() == 10);
+
+  REQUIRE(blob.extract<uint16_t>(1, std::endian::little) == 0xDDCC);
+  REQUIRE(blob.extract<uint32_t>(3, std::endian::big) == 0x0000'AABB);
+  REQUIRE(blob.extract_front<uint32_t>(std::endian::big) == 0xDEADBEEF);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+}
+
+TEST_CASE()
+{
+  std::byte buffer[14]{};
+
+  wlib::blob::obj blob{ buffer };
+
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+  REQUIRE_THROWS(blob.overwrite(0, static_cast<uint16_t>(0), std::endian::big));
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+  REQUIRE(blob.try_set_position(10));
+  REQUIRE(blob.get_number_of_used_bytes() == 10);
+
+  blob.overwrite_back(static_cast<uint32_t>(0x00AA'BBEF), std::endian::big);
+  blob.overwrite_front(static_cast<uint32_t>(0xDECC'DDAD), std::endian::big);
+  blob.overwrite(4, static_cast<uint16_t>(0xBE00), std::endian::big);
+  REQUIRE(blob.get_number_of_used_bytes() == 10);
+
+  REQUIRE(blob.extract<uint16_t>(1, std::endian::little) == 0xDDCC);
+  REQUIRE(blob.extract<uint32_t>(3, std::endian::big) == 0x0000'AABB);
+  REQUIRE(blob.extract_front<uint32_t>(std::endian::big) == 0xDEADBEEF);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
 }

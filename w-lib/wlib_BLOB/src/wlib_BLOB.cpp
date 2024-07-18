@@ -1,14 +1,12 @@
-#include <wlib_BLOB.hpp>
+#include "wlib_BLOB.hpp"
+
 #include <stdexcept>
+#include <wlib_BLOB.hpp>
 
 namespace wlib::blob
 {
-  void obj::handle_push_back_exception() { throw std::out_of_range("No bytes to push back"); }
-  void obj::handle_push_front_exception() { throw std::out_of_range("No bytes to push front"); }
-
-  void obj::handle_drop_back_exception() { throw std::out_of_range("No bytes to drop back"); }
-  void obj::handle_drop_front_exception() { throw std::out_of_range("No bytes to drop front"); }
-
-  std::byte obj::handle_peak_back_exception() { throw std::out_of_range("No bytes to peak back"); }
-  std::byte obj::handle_peak_front_exception() { throw std::out_of_range("No bytes to peak front"); }
+  void obj::handle_overwrite_exception() { throw std::out_of_range("not enouth room to insert object"); }
+  void obj::handle_insert_exception() { throw std::out_of_range("not enouth room to insert object"); }
+  void obj::handle_remove_exception() { throw std::out_of_range("not enouth bytes left"); }
+  void obj::handle_read_exception() { throw std::out_of_range("not enouth bytes left to read"); }
 }    // namespace wlib::blob
