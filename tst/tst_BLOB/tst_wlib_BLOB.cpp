@@ -2,7 +2,7 @@
 #include <ut_catch.hpp>
 #include <wlib_BLOB.hpp>
 
-void print_buffer(wlib::blob::obj const& blob, std::span<std::byte> const& buffer)
+void print_buffer(wlib::blob::MemoryBlob const& blob, std::span<std::byte> const& buffer)
 {
   for (std::byte entry : blob.get_blob())
   {
@@ -20,7 +20,7 @@ TEST_CASE()
 {
   std::byte buffer[30]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_total_number_of_bytes() == 30);
   REQUIRE(blob.get_number_of_free_bytes() == 30);
@@ -46,7 +46,7 @@ TEST_CASE()
 {
   std::byte buffer[14]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_total_number_of_bytes() == 14);
   REQUIRE(blob.get_number_of_free_bytes() == 14);
@@ -99,7 +99,7 @@ TEST_CASE()
 
   std::byte buffer[buffer_size]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_total_number_of_bytes() == buffer_size);
   REQUIRE(blob.get_number_of_free_bytes() == buffer_size);
@@ -204,7 +204,7 @@ TEST_CASE()
 {
   std::byte buffer[14]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_total_number_of_bytes() == 14);
   REQUIRE(blob.get_number_of_free_bytes() == 14);
@@ -235,7 +235,7 @@ TEST_CASE()
 {
   std::byte buffer[14]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_number_of_used_bytes() == 0);
   REQUIRE_THROWS(blob.insert(1, static_cast<uint16_t>(0), std::endian::big));
@@ -256,7 +256,7 @@ TEST_CASE()
 {
   std::byte buffer[14]{};
 
-  wlib::blob::obj blob{ buffer };
+  wlib::blob::MemoryBlob blob{ buffer };
 
   REQUIRE(blob.get_number_of_used_bytes() == 0);
   REQUIRE_THROWS(blob.overwrite(0, static_cast<uint16_t>(0), std::endian::big));
