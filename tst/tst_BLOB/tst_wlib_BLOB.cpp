@@ -68,6 +68,72 @@ TEST_CASE()
 
 TEST_CASE()
 {
+  std::byte                    buffer[30]{};
+  wlib::blob::MemoryBlob const blob{ buffer };
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 30);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  std::span<std::byte const> blob_span = blob.get_blob();
+
+  REQUIRE(&buffer[0] == blob_span.data());
+}
+
+TEST_CASE()
+{
+  std::byte              buffer[30]{};
+  wlib::blob::MemoryBlob blob{ buffer };
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 30);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  std::span<std::byte> blob_span = blob.get_blob();
+
+  REQUIRE(&buffer[0] == blob_span.data());
+}
+
+TEST_CASE()
+{
+  std::byte              buffer[30]{};
+  wlib::blob::MemoryBlob blob{ buffer };
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 30);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+
+  blob.adjust_position(5);
+
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 25);
+  REQUIRE(blob.get_number_of_used_bytes() == 5);
+
+  REQUIRE_THROWS(blob.adjust_position(-6));
+  REQUIRE_THROWS(blob.adjust_position(30));
+
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 25);
+  REQUIRE(blob.get_number_of_used_bytes() == 5);
+
+  blob.set_position(30);
+
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 0);
+  REQUIRE(blob.get_number_of_used_bytes() == 30);
+
+  REQUIRE_THROWS(blob.set_position(31));
+
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 0);
+  REQUIRE(blob.get_number_of_used_bytes() == 30);
+
+  blob.clear();
+
+  REQUIRE(blob.get_total_number_of_bytes() == 30);
+  REQUIRE(blob.get_number_of_free_bytes() == 30);
+  REQUIRE(blob.get_number_of_used_bytes() == 0);
+}
+
+TEST_CASE()
+{
   std::byte buffer[30]{};
 
   wlib::blob::MemoryBlob blob{ buffer };
@@ -323,4 +389,63 @@ TEST_CASE()
   REQUIRE(blob.extract<uint32_t>(3, std::endian::big) == 0x0000'AABB);
   REQUIRE(blob.extract_front<uint32_t>(std::endian::big) == 0xDEADBEEF);
   REQUIRE(blob.get_number_of_used_bytes() == 0);
+}
+
+TEST_CASE()
+{
+  std::byte buffer[6]{
+    std::byte(0x01), std::byte(0x02), std::byte(0x03), std::byte(0x04), std::byte(0x05), std::byte(0x06),
+  };
+
+  wlib::blob::MemoryBlob const blob{ buffer, sizeof(buffer), sizeof(buffer) };
+
+  REQUIRE(blob.get_total_number_of_bytes() == 6);
+  REQUIRE(blob.get_number_of_free_bytes() == 0);
+  REQUIRE(blob.get_number_of_used_bytes() == 6);
+
+  uint32_t const val_1 = blob.read_front<uint32_t>(std::endian::little);
+  uint32_t const val_2 = blob.read_front<uint32_t>(std::endian::big);
+  uint32_t const val_3 = blob.read_back<uint32_t>(std::endian::little);
+  uint32_t const val_4 = blob.read_back<uint32_t>(std::endian::big);
+  uint32_t const val_5 = blob.read<uint32_t>(1, std::endian::little);
+  uint32_t const val_6 = blob.read<uint32_t>(1, std::endian::big);
+
+  REQUIRE(val_1 == 0x0403'0201);
+  REQUIRE(val_2 == 0x0102'0304);
+  REQUIRE(val_3 == 0x0605'0403);
+  REQUIRE(val_4 == 0x0304'0506);
+  REQUIRE(val_5 == 0x0504'0302);
+  REQUIRE(val_6 == 0x0203'0405);
+
+  REQUIRE_THROWS(blob.read<uint32_t>(3));
+  REQUIRE_THROWS(blob.read_front<uint64_t>());
+  REQUIRE_THROWS(blob.read_back<uint64_t>());
+}
+
+TEST_CASE()
+{
+  std::byte buffer[6]{
+    std::byte(0x01), std::byte(0x02), std::byte(0x03), std::byte(0x04), std::byte(0x05), std::byte(0x06),
+  };
+
+  wlib::blob::MemoryBlob blob{ buffer, sizeof(buffer), sizeof(buffer) };
+
+  REQUIRE(blob.get_total_number_of_bytes() == 6);
+  REQUIRE(blob.get_number_of_free_bytes() == 0);
+  REQUIRE(blob.get_number_of_used_bytes() == 6);
+
+  blob.overwrite_front(static_cast<uint16_t>(0xAABB), std::endian::little);
+  blob.overwrite_back(static_cast<uint16_t>(0xEEFF), std::endian::big);
+  blob.overwrite(2, static_cast<uint16_t>(0xCCDD), std::endian::big);
+
+  REQUIRE(buffer[0] == std::byte(0xBB));
+  REQUIRE(buffer[1] == std::byte(0xAA));
+  REQUIRE(buffer[2] == std::byte(0xCC));
+  REQUIRE(buffer[3] == std::byte(0xDD));
+  REQUIRE(buffer[4] == std::byte(0xEE));
+  REQUIRE(buffer[5] == std::byte(0xFF));
+
+  REQUIRE_THROWS(blob.overwrite(3, static_cast<uint32_t>(0)));
+  REQUIRE_THROWS(blob.overwrite_front(static_cast<uint64_t>(0)));
+  REQUIRE_THROWS(blob.overwrite_back(static_cast<uint64_t>(0)));
 }

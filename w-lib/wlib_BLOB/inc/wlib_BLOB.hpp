@@ -117,6 +117,9 @@ namespace wlib::blob
     template <ArithmeticOrByte T> bool try_extract_back(T& value, std::endian endian = std::endian::native) noexcept;
     template <ArithmeticOrByte T> bool try_extract_front(T& value, std::endian endian = std::endian::native) noexcept;
 
+    void adjust_position(std::ptrdiff_t const& offset);
+    void set_position(std::size_t const& position);
+
     void overwrite(std::size_t const& offset, std::byte const* begin, std::size_t const& number_of_bytes);
     void overwrite_reverse(std::size_t const& offset, std::byte const* begin, std::size_t const& number_of_bytes);
 
@@ -202,6 +205,7 @@ namespace wlib::blob
     static void handle_insert_exception();
     static void handle_remove_exception();
     static void handle_read_exception();
+    static void handle_position_exception();
 
     std::byte*  m_data;
     std::size_t m_size;
@@ -423,16 +427,16 @@ namespace wlib::blob
       : MemoryBlob(data.data(), data.size_bytes(), position_idx)
   {
   }
-  inline constexpr std::size_t MemoryBlob::get_total_number_of_bytes() const noexcept { return this->m_size; }
-  inline constexpr std::size_t MemoryBlob::get_number_of_free_bytes() const noexcept { return this->m_size - this->m_pos_idx; }
+  inline constexpr std::size_t                              MemoryBlob::get_total_number_of_bytes() const noexcept { return this->m_size; }
+  inline constexpr std::size_t                              MemoryBlob::get_number_of_free_bytes() const noexcept { return this->m_size - this->m_pos_idx; }
   inline constexpr std::size_t                              MemoryBlob::get_number_of_used_bytes() const noexcept { return this->m_pos_idx; }
   [[nodiscard]] inline constexpr std::span<std::byte const> MemoryBlob::get_blob() const noexcept
   {
     return std::span<std::byte const>(this->m_data, this->m_pos_idx);
   }
   [[nodiscard]] inline constexpr std::span<std::byte> MemoryBlob::get_blob() noexcept { return std::span<std::byte>(this->m_data, this->m_pos_idx); }
-  inline constexpr void        MemoryBlob::clear() noexcept { this->m_pos_idx = 0; }
-  inline constexpr bool        MemoryBlob::try_adjust_position(std::ptrdiff_t const& offset) noexcept
+  inline constexpr void                               MemoryBlob::clear() noexcept { this->m_pos_idx = 0; }
+  inline constexpr bool                               MemoryBlob::try_adjust_position(std::ptrdiff_t const& offset) noexcept
   {
     if ((offset > 0) && (this->m_pos_idx + offset) > this->m_size)
       return false;
@@ -481,6 +485,8 @@ namespace wlib::blob
   }
   inline bool MemoryBlob::try_overwrite_back(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
   {
+    if (this->m_pos_idx < number_of_bytes)
+      return false;
     return this->try_overwrite(this->m_pos_idx - number_of_bytes, begin, number_of_bytes);
   }
   inline bool MemoryBlob::try_overwrite_back(std::span<std::byte> const& data) noexcept
@@ -513,6 +519,8 @@ namespace wlib::blob
   }
   inline bool MemoryBlob::try_overwrite_back_reverse(std::byte const* begin, std::size_t const& number_of_bytes) noexcept
   {
+    if (this->m_pos_idx < number_of_bytes)
+      return false;
     return this->try_overwrite_reverse(this->m_pos_idx - number_of_bytes, begin, number_of_bytes);
   }
   inline bool MemoryBlob::try_overwrite_back_reverse(std::span<std::byte> const& data) noexcept
@@ -633,6 +641,8 @@ namespace wlib::blob
   }
   inline constexpr bool MemoryBlob::try_read_back(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
   {
+    if (this->m_pos_idx < number_of_bytes)
+      return false;
     return this->try_read(this->m_pos_idx - number_of_bytes, ptr, number_of_bytes);
   }
   inline constexpr bool MemoryBlob::try_read_front(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
@@ -641,6 +651,8 @@ namespace wlib::blob
   }
   inline constexpr bool MemoryBlob::try_read_back_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
   {
+    if (this->m_pos_idx < number_of_bytes)
+      return false;
     return this->try_read_reverse(this->m_pos_idx - number_of_bytes, ptr, number_of_bytes);
   }
   inline constexpr bool MemoryBlob::try_read_front_reverse(std::byte* ptr, std::size_t const& number_of_bytes) const noexcept
@@ -660,6 +672,16 @@ namespace wlib::blob
     return this->try_remove(this->m_pos_idx - number_of_bytes, number_of_bytes);
   }
   inline bool MemoryBlob::try_remove_front(std::size_t const& number_of_bytes) noexcept { return this->try_remove(0, number_of_bytes); }
+  inline void MemoryBlob::adjust_position(std::ptrdiff_t const& offset)
+  {
+    if (!this->try_adjust_position(offset))
+      return MemoryBlob::handle_position_exception();
+  }
+  inline void MemoryBlob::set_position(std::size_t const& position)
+  {
+    if (!this->try_set_position(position))
+      return MemoryBlob::handle_position_exception();
+  }
   inline void MemoryBlob::overwrite(std::size_t const& offset, std::byte const* begin, std::size_t const& number_of_bytes)
   {
     if (!this->try_overwrite(offset, begin, number_of_bytes))
