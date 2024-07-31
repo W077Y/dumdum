@@ -23,3 +23,6 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/w-lib")
 
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/tst")
 
+
+include(CTest)
+
