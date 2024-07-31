@@ -854,7 +854,12 @@ namespace wlib::blob
     if (!this->try_remove(offset, number_of_bytes))
       return MemoryBlob::handle_remove_exception();
   }
-  inline void        MemoryBlob::remove_back(std::size_t const& number_of_bytes) { return this->remove(this->m_pos_idx - number_of_bytes, number_of_bytes); }
+  inline void MemoryBlob::remove_back(std::size_t const& number_of_bytes)
+  {
+    if (this->m_pos_idx < number_of_bytes)
+      return MemoryBlob::handle_remove_exception();
+    return this->remove(this->m_pos_idx - number_of_bytes, number_of_bytes);
+  }
   inline void        MemoryBlob::remove_front(std::size_t const& number_of_bytes) { return this->remove(0, number_of_bytes); }
   inline std::size_t MemoryBlob::data_shift_right(std::byte* data, std::size_t const& size, std::size_t const& offset, std::size_t const& shift)
   {
