@@ -1,4 +1,7 @@
-.vs
+.*
+!.gitignore
+!.clang-format
+
 out
 build
 *.user

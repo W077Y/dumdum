@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 
 
-project(WLib-Project
+project(PROJECT_WLib
  VERSION 0.0.0.0
  DESCRIPTION "A dummy Project"
  HOMEPAGE_URL ""
@@ -15,13 +15,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 enable_testing()
 
-message(STATUS "########################|")
-message(STATUS "#          W-Lib-Project:${CMAKE_PROJECT_NAME}")
+message(STATUS "########################")
+message(STATUS "##  ${CMAKE_PROJECT_NAME}")
+message(STATUS "########################")
 
+message(STATUS "##  EXTERNALS")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/externals")
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/w-lib")
+message(STATUS "########################")
 
+message(STATUS "##  LIBS")
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/wlib")
+message(STATUS "########################")
+
+message(STATUS "##  TESTS")
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/tst")
+message(STATUS "########################")
 
 
 include(CTest)
